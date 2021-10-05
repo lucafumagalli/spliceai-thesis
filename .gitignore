@@ -1,0 +1,4 @@
+*.fa
+canonical_sequence.txt
+*.pyc
+*.h5
