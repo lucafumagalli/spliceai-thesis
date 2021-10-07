@@ -13,5 +13,10 @@ python create_datafile.py test 0
 python create_dataset.py train all
 python create_dataset.py test 0
 
-```
-```create_dataset.py``` and ```create_datafile.py``` need to be tested with python 2.7.
+``` 
+
+```spliceai.py``` has the functions necessary to create the SpliceAI model.   
+
+```test_model.py``` contains code to test the SpliceAI model.  
+
+The code was tested using ```keras==2.0.5``` and ```tensorflow==1.11.0```
