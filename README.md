@@ -1,7 +1,6 @@
-# SpliceAI
-### README from Illumina SpliceAI project 
+# SpliceAI 
 First, update the ```constants.py``` file:
-ref_genome: path of the genome.fa file (hg19/GRCh37)
+ref_genome: path of the ```genome.fa``` file (hg19/GRCh37), can be downloaded from [GRCh37/hg19](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz)   
 
 Then, use the following commands:
 
@@ -15,5 +14,4 @@ python create_dataset.py train all
 python create_dataset.py test 0
 
 ```
-```create_dataset.py``` and ```create_datafile.py``` need to be tested with python 2.7.   
-The genome.fa file can be downloaded from [GRCh37/hg19](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz)
+```create_dataset.py``` and ```create_datafile.py``` need to be tested with python 2.7.
