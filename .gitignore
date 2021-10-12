@@ -1,5 +1,9 @@
 *.fa
 canonical_sequence.txt
 *.pyc
-*.h5
 Analysis\ SpliceAI\ supplementary\ data/
+datafile_test_0.h5
+datafile_train_all.h5
+dataset_test_0.h5
+dataset_train_all.h5
+
