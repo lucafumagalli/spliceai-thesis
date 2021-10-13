@@ -24,7 +24,7 @@ model = [[] for v in range(len(version))]
 
 for v in range(len(version)):
     model[v] = load_model('Models/SpliceAI' + str(CL)
-                          + '_c' + str(version[v]) + '.h5')
+                          + '_c' + str(version[v]) + '.h5', compile="False")
 
 h5f = h5py.File(data_dir + 'dataset' + '_' + 'test'
                 + '_' + '0' + '.h5', 'r')
