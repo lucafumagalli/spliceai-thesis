@@ -1,6 +1,5 @@
-# SpliceAI 
-First, update the ```constants.py``` file:
-ref_genome: path of the ```genome.fa``` file (hg19/GRCh37), can be downloaded from [GRCh37/hg19](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz)   
+# SpliceAI
+Download the ```genome.fa``` file (hg19/GRCh37) from [GRCh37/hg19](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz) in ```/canonical``` folder
 
 Then, use the following commands:
 
