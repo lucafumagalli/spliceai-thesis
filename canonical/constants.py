@@ -8,7 +8,7 @@ SL=5000
 # SL will be the output length)
 
 splice_table='canonical_dataset.txt'
-ref_genome='/path/to/genome.fa'
+ref_genome='../genome/genome.fa'
 
 # Input details
 
