@@ -15,6 +15,11 @@ from constants import *
 
 start_time = time.time()
 
+'''
+argv[1] identifies train or test set for taking the corresponding chromosomes
+argv[2] identifies if paralogs need to be in the dataset
+'''
+
 assert sys.argv[1] in ['train', 'test', 'all']
 assert sys.argv[2] in ['0', '1', 'all']
 
@@ -42,39 +47,50 @@ JN_START = []  # Positions where canonical exons end
 JN_END = []    # Positions where canonical exons start
 SEQ = []       # Nucleotide sequence
 
-fpr2 = open(sequence, 'r')
+#open the sequence file
+dna_sequence = open(sequence, 'r')
 
-with open(splice_table, 'r') as fpr1:
-    for line1 in fpr1:
+#open the annotations file
+with open(splice_table, 'r') as annotations_table:
+    for table_line in annotations_table:
 
-        line2 = fpr2.readline()
+        sequence_line = dna_sequence.readline()
 
-        data1 = re.split('\n|\t', line1)[:-1]
-        data2 = re.split('\n|\t|:|-', line2)[:-1]
+        table_list = re.split('\n|\t', table_line)[:-1]
+        sequence_list = re.split('\n|\t|:|-', sequence_line)[:-1]
     
+        chrom_table = table_list[2]
+        chrom_sequence = sequence_list[0]
+        transcr_start = table_list[4]
+        transcr_end = table_list[5]
+        paralog = table_list[1]
 
-        assert data1[2] == data2[0]
-        assert int(data1[4]) == int(data2[1])+CL_max//2+1
-        assert int(data1[5]) == int(data2[2])-CL_max//2
+ 
+        assert chrom_table == chrom_sequence
+        assert int(transcr_start) == int(sequence_list[1])+CL_max//2+1
+        assert int(transcr_end) == int(sequence_list[2])-CL_max//2
 
-        if (data1[2] not in CHROM_GROUP):
+        # check if the chromosome need to be in the dataset
+        if (chrom_table not in CHROM_GROUP):
             continue
-
-        if (sys.argv[2] != data1[1]) and (sys.argv[2] != 'all'):
+        
+        # check if the gene is a paralog
+        if (sys.argv[2] != paralog) and (sys.argv[2] != 'all'):
             continue
+        
+        
+        NAME.append(table_list[0])
+        PARALOG.append(int(paralog))
+        CHROM.append(chrom_table)
+        STRAND.append(table_list[3])
+        TX_START.append(transcr_start)
+        TX_END.append(transcr_end)
+        JN_START.append(table_list[6::2])
+        JN_END.append(table_list[7::2])
+        SEQ.append(sequence_list[3])
 
-        NAME.append(data1[0])
-        PARALOG.append(int(data1[1]))
-        CHROM.append(data1[2])
-        STRAND.append(data1[3])
-        TX_START.append(data1[4])
-        TX_END.append(data1[5])
-        JN_START.append(data1[6::2])
-        JN_END.append(data1[7::2])
-        SEQ.append(data2[3])
-
-fpr1.close()
-fpr2.close()
+dna_sequence.close()
+annotations_table.close()
 
 ###############################################################################
 
