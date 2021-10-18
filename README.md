@@ -1,16 +1,20 @@
 # SpliceAI
-Download the ```genome.fa``` file (hg19/GRCh37) from [GRCh37/hg19](http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz) in ```/canonical``` folder
 
-Then, use the following commands:
+## Datasets creation
+Use a python2 env and install requirements:   
+```
+pip install -r requirements/python2.txt
+```
+To download genome file(hg19/GRCh37) from [UCSC](https://hgdownload.soe.ucsc.edu/downloads.html) and create sequence file run:
 
 ```
-./grab_sequence.sh
+./canonical/grabsequence.sh
+```
+Then, use the following commands to create datasets:
 
-python create_datafile.py train all
-python create_datafile.py test 0
-
-python create_dataset.py train all
-python create_dataset.py test 0
+```
+./canonical/create_datafile.sh  
+./canonical/create_dataset.sh
 
 ``` 
 ```utils.py``` has functions which process the information in the .h5 files and convert them into a format usable by Keras.   
