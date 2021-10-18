@@ -5,17 +5,17 @@ Use a python2 env and install requirements:
 ```
 pip install -r requirements/python2.txt
 ```
+Use the following commands from ```canonical``` folder.   
 To download genome file(hg19/GRCh37) from [UCSC](https://hgdownload.soe.ucsc.edu/downloads.html) and create sequence file run:
 
 ```
-./canonical/grabsequence.sh
+.grabsequence.sh
 ```
-Then, use the following commands to create datasets:
+Then, to create datasets run:
 
 ```
-./canonical/create_datafile.sh  
-./canonical/create_dataset.sh
-
+.create_datafile.sh  
+.create_dataset.sh
 ``` 
 ```utils.py``` has functions which process the information in the .h5 files and convert them into a format usable by Keras.   
 
