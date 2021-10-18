@@ -7,3 +7,7 @@ datafile_train_all.h5
 dataset_test_0.h5
 dataset_train_all.h5
 *.fa.fai
+sys
+np
+time
+h5py
