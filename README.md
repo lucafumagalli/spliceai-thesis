@@ -9,13 +9,13 @@ Use the following commands from ```canonical``` folder.
 To download genome file(hg19/GRCh37) from [UCSC](https://hgdownload.soe.ucsc.edu/downloads.html) and create sequence file run:
 
 ```
-.grabsequence.sh
+./grabsequence.sh
 ```
 Then, to create datasets run:
 
 ```
-.create_datafile.sh  
-.create_dataset.sh
+./create_datafile.sh  
+./create_dataset.sh
 ``` 
 ```utils.py``` has functions which process the information in the .h5 files and convert them into a format usable by Keras.   
 
