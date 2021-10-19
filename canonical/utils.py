@@ -87,6 +87,8 @@ def create_datapoints(seq, strand, tx_start, tx_end, jn_start, jn_end):
     Xd, Yd = reformat_data(X0, Y0)
     X, Y = one_hot_encode(Xd, Yd)
 
+    #X shape = (num_points, 15.000, 4)
+    #Y shape = (num_points, 5.000, 3)
     return X, Y
 
 
@@ -113,6 +115,8 @@ def reformat_data(X0, Y0):
     for i in range(num_points):
         Yd[0][i] = Y0[0][SL*i:SL*(i+1)]
 
+    #shape Xd = (num_points, 15.000)
+    #shape Yd = (num_points, 5.000)
     return Xd, Yd
 
 
