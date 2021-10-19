@@ -2,11 +2,6 @@
 
 source constants.py
 
-if [ ! -f hg19.fa ]; then
-    wget http://hgdownload.cse.ucsc.edu/goldenPath/hg19/bigZips/hg19.fa.gz
-    gzip -d hg19.fa.gz
-fi
-
 CLr=$((CL_max/2))
 CLl=$(($CLr+1))
 # First nucleotide not included by BEDtools
