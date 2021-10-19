@@ -50,41 +50,39 @@ def create_datapoints(seq, strand, tx_start, tx_end, jn_start, jn_end):
     tx_start = int(tx_start)
     tx_end = int(tx_end) 
 
+    #convert string in a list of int values
     jn_start = map(lambda x: map(int, re.split(',', x)[:-1]), jn_start)
     jn_end = map(lambda x: map(int, re.split(',', x)[:-1]), jn_end)
 
     if strand == '+':
 
         X0 = np.asarray(map(int, list(seq)))
-        Y0 = [-np.ones(tx_end-tx_start+1) for t in range(1)]
+        Y0 = [-np.ones(tx_end-tx_start+1)]
 
-        for t in range(1):
-            
-            if len(jn_start[t]) > 0:
-                Y0[t] = np.zeros(tx_end-tx_start+1)
-                for c in jn_start[t]:
-                    if tx_start <= c <= tx_end:
-                        Y0[t][c-tx_start] = 2
-                for c in jn_end[t]:
-                    if tx_start <= c <= tx_end:
-                        Y0[t][c-tx_start] = 1
+        #check if a gene is an acceptor, donor or neither and set its label
+        if len(jn_start[0]) > 0:
+            Y0[0] = np.zeros(tx_end-tx_start+1)
+            for c in jn_start[0]:
+                if tx_start <= c <= tx_end:
+                    Y0[0][c-tx_start] = 2
+            for c in jn_end[0]:
+                if tx_start <= c <= tx_end:
+                        Y0[0][c-tx_start] = 1
                     # Ignoring junctions outside annotated tx start/end sites
                      
     elif strand == '-':
 
         X0 = (5-np.asarray(map(int, list(seq[::-1])))) % 5  # Reverse complement
-        Y0 = [-np.ones(tx_end-tx_start+1) for t in range(1)]
+        Y0 = [-np.ones(tx_end-tx_start+1)]
 
-        for t in range(1):
-
-            if len(jn_start[t]) > 0:
-                Y0[t] = np.zeros(tx_end-tx_start+1)
-                for c in jn_end[t]:
-                    if tx_start <= c <= tx_end:
-                        Y0[t][tx_end-c] = 2
-                for c in jn_start[t]:
-                    if tx_start <= c <= tx_end:
-                        Y0[t][tx_end-c] = 1
+        if len(jn_start[0]) > 0:
+            Y0[0] = np.zeros(tx_end-tx_start+1)
+            for c in jn_end[0]:
+                if tx_start <= c <= tx_end:
+                    Y0[0][tx_end-c] = 2
+            for c in jn_start[0]:
+                if tx_start <= c <= tx_end:
+                    Y0[0][tx_end-c] = 1
 
     Xd, Yd = reformat_data(X0, Y0)
     X, Y = one_hot_encode(Xd, Yd)
@@ -104,18 +102,16 @@ def reformat_data(X0, Y0):
     num_points = ceil_div(len(Y0[0]), SL)
 
     Xd = np.zeros((num_points, SL+CL_max))
-    Yd = [-np.ones((num_points, SL)) for t in range(1)]
+    Yd = [-np.ones((num_points, SL))]
 
     X0 = np.pad(X0, [0, SL], 'constant', constant_values=0)
-    Y0 = [np.pad(Y0[t], [0, SL], 'constant', constant_values=-1)
-         for t in range(1)]
+    Y0 = [np.pad(Y0[0], [0, SL], 'constant', constant_values=-1)]
 
     for i in range(num_points):
         Xd[i] = X0[SL*i:CL_max+SL*(i+1)]
 
-    for t in range(1):
-        for i in range(num_points):
-            Yd[t][i] = Y0[t][SL*i:SL*(i+1)]
+    for i in range(num_points):
+        Yd[0][i] = Y0[0][SL*i:SL*(i+1)]
 
     return Xd, Yd
 

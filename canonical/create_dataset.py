@@ -34,6 +34,10 @@ h5f2 = h5py.File(data_dir + 'dataset'
 
 CHUNK_SIZE = 100
 
+'''
+This for loop set the label for each base in the gene sequence by create_datapoints function.
+Dataset is created by using h5py
+'''
 for i in range(SEQ.shape[0]//CHUNK_SIZE):
     # Each dataset has CHUNK_SIZE genes
     
@@ -43,23 +47,24 @@ for i in range(SEQ.shape[0]//CHUNK_SIZE):
         NEW_CHUNK_SIZE = CHUNK_SIZE
 
     X_batch = []
-    Y_batch = [[] for t in range(1)]
+    Y_batch = [[]]
 
+    #this loop is executed number of genes times
     for j in range(NEW_CHUNK_SIZE):
-
+        
+        #idx from 0 to SEQ.shape[0]
         idx = i*CHUNK_SIZE + j
 
+        # create_datapoints from utils.py
         X, Y = create_datapoints(SEQ[idx], STRAND[idx],
                                  TX_START[idx], TX_END[idx],
                                  JN_START[idx], JN_END[idx])
 
         X_batch.extend(X)
-        for t in range(1):
-            Y_batch[t].extend(Y[t])
+        Y_batch[0].extend(Y[0])
 
     X_batch = np.asarray(X_batch).astype('int8')
-    for t in range(1):
-        Y_batch[t] = np.asarray(Y_batch[t]).astype('int8')
+    Y_batch[0] = np.asarray(Y_batch[0]).astype('int8')
 
     h5f2.create_dataset('X' + str(i), data=X_batch)
     h5f2.create_dataset('Y' + str(i), data=Y_batch)
