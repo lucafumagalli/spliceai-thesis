@@ -18,10 +18,4 @@ Then, to create datasets run:
 ./create_datafile.sh  
 ./create_dataset.sh
 ``` 
-```utils.py``` has functions which process the information in the .h5 files and convert them into a format usable by Keras.   
 
-```spliceai.py``` has the functions necessary to create the SpliceAI model.   
-
-```test_model.py``` contains code to test the SpliceAI model.  
-
-The code was tested using ```keras==2.0.5``` and ```tensorflow==1.11.0```
