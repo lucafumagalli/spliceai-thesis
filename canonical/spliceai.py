@@ -1,5 +1,16 @@
 ###############################################################################
-# This file has the functions necessary to create the SpliceAI model.
+'''
+This file has the functions necessary to create the SpliceAI model.
+The structure of the model depends on the number of nucleotides of input.
+The basic unit of the SpliceAI architectures is a residual block,
+which consists of batch-normalization layers,ReLU
+and convolutional units organized in a specific manner.
+
+The output of the models consists of three scores which sum to one,
+corresponding to the probability of the position of interest being a splice acceptor, splice donor, and neither.
+
+For creating this model is not used a sequential model, but functional API instead.
+'''
 ###############################################################################
 
 from keras.models import Model
@@ -16,6 +27,7 @@ def ResidualUnit(l, w, ar):
     # Residual unit proposed in "Identity mappings in Deep Residual Networks"
     # by He et al.
 
+    #conv layers use a dilation rate to increment the receptive field
     def f(input_node):
         bn1 = BatchNormalization()(input_node)
         act1 = Activation('relu')(bn1)
@@ -43,22 +55,22 @@ def SpliceAI(L, W, AR):
     conv = Conv1D(L, 1)(input0)
     skip = Conv1D(L, 1)(conv)
 
+    #create a residual unit for each value of the hyperparameters in train_model.py
     for i in range(len(W)):
         ws = (W[i],)
         ar = (AR[i], )
         conv = ResidualUnit(L, ws, ar)(conv)
         
+        #every 4 residual unit create a skip connection to the output
         if (((i+1) % 4 == 0) or ((i+1) == len(W))):
-            # Skip connections to the output after every 4 residual units
             dense = Conv1D(L, 1)(conv)
+            #Layer that adds a list of inputs.
             skip = add([skip, dense])
 
     skip = Cropping1D(int(CL/2))(skip)
 
-    output0 = [[] for t in range(1)]
-
-    for t in range(1):
-        output0[t] = Conv1D(3, 1, activation='softmax')(skip)
+    output0 = [[]]
+    output0[0] = Conv1D(3, 1, activation='softmax')(skip)
     
     model = Model(inputs=input0, outputs=output0)
     return model
