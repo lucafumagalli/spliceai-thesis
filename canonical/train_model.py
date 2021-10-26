@@ -75,15 +75,23 @@ h5f = h5py.File(data_dir + 'dataset' + '_' + 'train'
 
 num_idx = len(h5f.keys())//2
 idx_all = np.random.permutation(num_idx)
-#take indeces for train and test from the random permutation of dataset indeces
+
+'''
+Take indeces for train and validation from the random permutation of dataset indeces
+'''
 idx_train = idx_all[:int(0.9*num_idx)]
 idx_valid = idx_all[int(0.9*num_idx):]
 
+'''
+The model is trained for 10 epochs
+'''
 EPOCH_NUM = 10*len(idx_train)
 
 start_time = time.time()
 
-
+'''
+In each epoch get a index from idx_train and use it to train the model on  h5f[idx] values.
+'''
 for epoch_num in range(EPOCH_NUM):
 
     idx = np.random.choice(idx_train)
@@ -94,9 +102,14 @@ for epoch_num in range(EPOCH_NUM):
     Xc, Yc = clip_datapoints(X, Y, CL, N_GPUS) 
     model_m.fit(Xc, Yc, batch_size=BATCH_SIZE, verbose=0)
 
-    #print metrics of validation for check performances
+    '''
+    When the length of idx_train is a multiple of the number of the successive epoch,
+    print metrics for validation and training set
+    '''
     if (epoch_num+1) % len(idx_train) == 0:
         # Printing metrics (see utils.py for details)
+        '''
+        '''
 
         print ("--------------------------------------------------------------")
         print ("\n\033[1mValidation set metrics:\033[0m")
@@ -106,13 +119,18 @@ for epoch_num in range(EPOCH_NUM):
         Y_pred_1 = [[]]
         Y_pred_2 = [[]]
 
-        #predict value for validation indices
+        '''
+        Predict the validation set
+        '''
         for idx in idx_valid:
 
             X = h5f['X' + str(idx)][:]
             Y = h5f['Y' + str(idx)][:]
 
             Xc, Yc = clip_datapoints(X, Y, CL, N_GPUS)
+            '''
+            Prediction of a subset of the validation set
+            '''
             Yp = model_m.predict(Xc, batch_size=BATCH_SIZE)
 
             if not isinstance(Yp, list):
@@ -126,6 +144,10 @@ for epoch_num in range(EPOCH_NUM):
             Y_pred_1[0].extend(Yp[0][is_expr, :, 1].flatten())
             Y_pred_2[0].extend(Yp[0][is_expr, :, 2].flatten())
 
+        
+        '''
+        Print the statistics for the validation set
+        '''
         print ("\n\033[1mAcceptor:\033[0m")
         print_topl_statistics(np.asarray(Y_true_1[0]),
                                 np.asarray(Y_pred_1[0]))
@@ -141,6 +163,9 @@ for epoch_num in range(EPOCH_NUM):
         Y_pred_1 = [[]]
         Y_pred_2 = [[]]
 
+        '''
+        Predict the first len(idx_valid) elements of the training set
+        '''
         for idx in idx_train[:len(idx_valid)]:
 
             X = h5f['X' + str(idx)][:]
@@ -159,6 +184,9 @@ for epoch_num in range(EPOCH_NUM):
             Y_pred_1[0].extend(Yp[0][is_expr, :, 1].flatten())
             Y_pred_2[0].extend(Yp[0][is_expr, :, 2].flatten())
 
+        '''
+        Print the statistics for the training set
+        '''
         print ("\n\033[1mAcceptor:\033[0m")
         print_topl_statistics(np.asarray(Y_true_1[0]),
                                 np.asarray(Y_pred_1[0]))
@@ -176,12 +204,14 @@ for epoch_num in range(EPOCH_NUM):
         model.save('./Models/SpliceAI' + sys.argv[1]
                    + '_c' + sys.argv[2] + '.h5')
 
+        '''
+        The learning rate of the optimizer was set to 0.001 for the first 6 epochs,
+        and then reduced by a factor of 2 in every subsequent epoch
+        '''
         if (epoch_num+1) >= 6*len(idx_train):
             kb.set_value(model_m.optimizer.lr,
                          0.5*kb.get_value(model_m.optimizer.lr))
-            # Learning rate decay
 
 h5f.close()
         
 ###############################################################################
-
