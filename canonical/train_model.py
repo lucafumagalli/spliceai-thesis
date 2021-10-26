@@ -27,7 +27,7 @@ N_GPUS = 2
 #SEEDS
 s = 1
 np.random.seed(s)
-tf.random.setseed(s)
+#tf.random.setseed(s)
 
 # Hyper-parameters:
 # L: Number of convolution kernels
