@@ -58,12 +58,15 @@ for output_class in [1, 2]:
         for v in range(len(version)):
 
             Yp = model[v].predict(Xc, batch_size=BATCH_SIZE)
+            '''
+                Print sum of softmax output for checking if sum is equal to 1
+            '''
             print('Yp shape: ' +  str(Yp.shape))
             for y in Yp:
                 sum = 0
                 for score in y:
                     sum = score[0] + score[1] + score[2]
-                    print('Sum score: ' + str(sum))
+                    print('Sum of softmax outpt: ' + str(sum))
 
             if not isinstance(Yp, list):
                 Yp = [Yp]
