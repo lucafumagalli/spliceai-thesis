@@ -18,13 +18,13 @@ CL = int(sys.argv[1])
 ###############################################################################
 
 BATCH_SIZE = 6
-version = [1, 2, 3, 4, 5]
+version = [1]
 
 model = [[] for v in range(len(version))]
 
 for v in range(len(version)):
     model[v] = load_model('Models/SpliceAI' + str(CL)
-                          + '_c' + str(version[v]) + '.h5', compile="False")
+                          + '_c' + str(version[v]) + '.h5', compile=False)
 
 h5f = h5py.File(data_dir + 'dataset' + '_' + 'test'
                 + '_' + '0' + '.h5', 'r')
@@ -58,6 +58,12 @@ for output_class in [1, 2]:
         for v in range(len(version)):
 
             Yp = model[v].predict(Xc, batch_size=BATCH_SIZE)
+            print('Yp shape: ' +  str(Yp.shape))
+            for y in Yp:
+                sum = 0
+                for score in y:
+                    sum = score[0] + score[1] + score[2]
+                    print('Sum score: ' + str(sum))
 
             if not isinstance(Yp, list):
                 Yp = [Yp]
