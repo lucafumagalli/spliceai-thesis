@@ -104,13 +104,10 @@ for epoch_num in range(EPOCH_NUM):
 
     '''
     When the length of idx_train is a multiple of the number of the successive epoch,
-    print metrics for validation and training set
+    print metrics(see utils.py for details) for validation and training set
     '''
     if (epoch_num+1) % len(idx_train) == 0:
-        # Printing metrics (see utils.py for details)
-        '''
-        '''
-
+        
         print ("--------------------------------------------------------------")
         print ("\n\033[1mValidation set metrics:\033[0m")
 
