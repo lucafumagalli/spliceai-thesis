@@ -24,6 +24,11 @@ Creation of the model with the right hyper-parameters depending of the argv[1], 
 L = 32
 N_GPUS = 2
 
+#SEEDS
+s = 1
+np.random.seed(s)
+tf.random.setseed(s)
+
 # Hyper-parameters:
 # L: Number of convolution kernels
 # W: Convolution window size in each residual unit
@@ -91,7 +96,12 @@ for epoch_num in range(EPOCH_NUM):
     X = h5f['X' + str(idx)][:]
     Y = h5f['Y' + str(idx)][:]
 
-    Xc, Yc = clip_datapoints(X, Y, CL, N_GPUS) 
+    print('X shape: ' + str(X.shape))
+    print('Y shape: ' + str(Y[0].shape))
+
+    Xc, Yc = clip_datapoints(X, Y, CL, N_GPUS)
+    print('X shape after clip_datapoints: ' + str(Xc.shape))
+    print('Y shape after clip_datapoints: ' + str(Yc[0].shape))
     model_m.fit(Xc, Yc, batch_size=BATCH_SIZE, verbose=0)
 
     #print metrics of validation for check performances
@@ -114,6 +124,7 @@ for epoch_num in range(EPOCH_NUM):
 
             Xc, Yc = clip_datapoints(X, Y, CL, N_GPUS)
             Yp = model_m.predict(Xc, batch_size=BATCH_SIZE)
+            print('Y predicted shape: ' + str(Yp.shape))
 
             if not isinstance(Yp, list):
                 Yp = [Yp]
