@@ -61,12 +61,18 @@ for output_class in [1, 2]:
             '''
                 Print sum of softmax output for checking if sum is equal to 1
             '''
+            print('Xc shape: ' + str(Xc.shape))
             print('Yp shape: ' +  str(Yp.shape))
             for y in Yp:
                 sum = 0
+                sum_bool = True
                 for score in y:
                     sum = score[0] + score[1] + score[2]
-                    print('Sum of softmax outpt: ' + str(sum))
+                    if(sum > 1.01 or sum < 0.99):
+                        print("SOFTMAX ERROR")
+                        sum_bool = False
+            if sum_bool == True:
+                print("Soft max checked")
 
             if not isinstance(Yp, list):
                 Yp = [Yp]
