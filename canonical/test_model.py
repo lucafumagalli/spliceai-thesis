@@ -84,8 +84,7 @@ for output_class in [1, 2]:
             '''
                 The final prediction is the average
                 of the five predictions of the five
-                different models, so each prediction is divided
-                for the number of models and summed
+                different models
             '''
             Yps[0] += Yp[0]/len(version)
             
