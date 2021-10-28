@@ -50,7 +50,7 @@ This parser takes as input the text files canonical_dataset.txt and canonical_se
 This parser takes as input the .h5 file produced by create_datafile.py and outputs a .h5 file with datapoints of the form (X, Y), which can be understood by Keras models.
 ### ```spliceai.py```
 This file has the functions to create the spliceAI model, that is represented in the figure below, depending on the number of nucleotides used a different model is created.
-![alt text](https://raw.githubusercontent.com/lucafumagalli/spliceai-thesis/main/images/architectures.png?token=ACTSO2SZZRLJ7X57S7FGR3LBPF3TK)
+![alt text](https://github.com/lucafumagalli/spliceai-thesis/blob/main/images/architectures.png)
 ### ```train_model.py```
 This file contains the code to train the SpliceAI model.
 ### ```test_model.py```
