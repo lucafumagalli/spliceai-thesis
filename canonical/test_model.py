@@ -21,7 +21,9 @@ BATCH_SIZE = 6
 version = [1, 2, 3, 4, 5]
 
 model = [[] for v in range(len(version))]
-
+'''
+Load the 5 models and load them into model[]
+'''
 for v in range(len(version)):
     model[v] = load_model('Models/SpliceAI' + str(CL)
                           + '_c' + str(version[v]) + '.h5', compile=False)
@@ -29,32 +31,49 @@ for v in range(len(version)):
 h5f = h5py.File(data_dir + 'dataset' + '_' + 'test'
                 + '_' + '0' + '.h5', 'r')
 
+'''
+Get the number of keys  of the test dataset
+'''
 num_idx = len(h5f.keys())//2
 
 ###############################################################################
-# Model testing
+'''
+Model testing
+'''
 ###############################################################################
 
 start_time = time.time()
 
+'''
+The three neurons per output correspond to no splicing, 
+splice acceptor (AG) and splice donor (GT) respectively.
+'''
 output_class_labels = ['Null', 'Acceptor', 'Donor']
-# The three neurons per output correspond to no splicing, splice acceptor (AG)
-# and splice donor (GT) respectively.
+
 
 for output_class in [1, 2]:
 
     Y_true = [[] for t in range(1)]
     Y_pred = [[] for t in range(1)]
 
+    '''
+    Loop over each subset of the test set
+    '''
     for idx in range(num_idx):
 
+        '''
+        Take data and their labels
+        '''
         X = h5f['X' + str(idx)][:]
         Y = h5f['Y' + str(idx)][:]
 
         Xc, Yc = clip_datapoints(X, Y, CL, 1)
 
-        Yps = [np.zeros(Yc[0].shape) for t in range(1)]
+        Yps = [np.zeros(Yc[0].shape)]
 
+        '''
+        Prediction for each of the 5 model
+        '''
         for v in range(len(version)):
 
             Yp = model[v].predict(Xc, batch_size=BATCH_SIZE)
@@ -62,25 +81,25 @@ for output_class in [1, 2]:
             if not isinstance(Yp, list):
                 Yp = [Yp]
 
-            for t in range(1):
-                Yps[t] += Yp[t]/len(version)
-        # Ensemble averaging (mean of the ensemble predictions is used)
+            '''
+                The final prediction is the average
+                of the five predictions of the five
+                different models, so each prediction is divided
+                for the number of models and summed
+            '''
+            Yps[0] += Yp[0]/len(version)
+            
+        is_expr = (Yc[0].sum(axis=(1,2)) >= 1)
 
-        for t in range(1):
-
-            is_expr = (Yc[t].sum(axis=(1,2)) >= 1)
-
-            Y_true[t].extend(Yc[t][is_expr, :, output_class].flatten())
-            Y_pred[t].extend(Yps[t][is_expr, :, output_class].flatten())
+        Y_true[0].extend(Yc[0][is_expr, :, output_class].flatten())
+        Y_pred[0].extend(Yps[0][is_expr, :, output_class].flatten())
 
     print ("\n\033[1m%s:\033[0m" % (output_class_labels[output_class]))
 
-    for t in range(1):
+    Y_true[0] = np.asarray(Y_true[0])
+    Y_pred[0] = np.asarray(Y_pred[0])
 
-        Y_true[t] = np.asarray(Y_true[t])
-        Y_pred[t] = np.asarray(Y_pred[t])
-
-        print_topl_statistics(Y_true[t], Y_pred[t])
+    print_topl_statistics(Y_true[0], Y_pred[0])
 
 
 h5f.close()

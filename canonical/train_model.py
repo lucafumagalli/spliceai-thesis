@@ -1,5 +1,7 @@
 ###############################################################################
-# This file contains the code to train the SpliceAI model.
+'''
+This file contains the code to train the SpliceAI model.
+'''
 ###############################################################################
 
 import numpy as np
@@ -17,7 +19,7 @@ assert int(sys.argv[1]) in [80, 400, 2000, 10000]
 
 ###############################################################################
 '''
-Creation of the model with the right hyper-parameters depending of the argv[1], the number of nucleotides.
+Creation of the model with the hyper-parameters depending of the argv[1], the number of nucleotides.
 '''
 ###############################################################################
 
@@ -174,6 +176,9 @@ for epoch_num in range(EPOCH_NUM):
             if not isinstance(Yp, list):
                 Yp = [Yp]
 
+            '''
+            Create a list of boolean values where is True 
+            '''
             is_expr = (Yc[0].sum(axis=(1,2)) >= 1)
 
             Y_true_1[0].extend(Yc[0][is_expr, :, 1].flatten())
@@ -202,7 +207,7 @@ for epoch_num in range(EPOCH_NUM):
                    + '_c' + sys.argv[2] + '.h5')
 
         '''
-        The learning rate of the optimizer was set to 0.001 for the first 6 epochs,
+        The learning rate of the optimizer was set to 0.001(default) for the first 6 epochs,
         and then reduced by a factor of 2 in every subsequent epoch
         '''
         if (epoch_num+1) >= 6*len(idx_train):

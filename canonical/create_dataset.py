@@ -20,8 +20,10 @@ h5f = h5py.File(data_dir + 'datafile'
                 + '_' + sys.argv[1] + '_' + sys.argv[2]
                 + '.h5', 'r')
 
-#each of these variable has 1.652 and 13.384 values
-#for test set and train set respectively
+'''
+each of these variable has 1.652 and 13.384 values
+for test set and train set respectively
+'''
 SEQ = h5f['SEQ'][:]
 STRAND = h5f['STRAND'][:]
 TX_START = h5f['TX_START'][:]
