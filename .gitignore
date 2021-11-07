@@ -14,3 +14,10 @@ h5py
 canonical/Models
 canonical/Outputs
 re
+canonical/create_datafile_minimized.py
+canonical/create_dataset_minimized.py
+canonical/datafile_test_0_minimized.h5
+canonical/datafile_train_0_minimized.h5
+canonical/dataset_test_0_minimized.h5
+canonical/script_train_minimized.sh
+canonical/train_model_minimized.py
