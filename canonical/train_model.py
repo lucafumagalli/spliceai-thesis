@@ -14,6 +14,10 @@ from spliceai import *
 from utils import *
 from multi_gpu import *
 from constants import * 
+import matplotlib.pyplot as plt
+from tqdm import tqdm
+import pandas as pd
+
 
 assert int(sys.argv[1]) in [80, 400, 2000, 10000]
 
@@ -62,6 +66,17 @@ assert CL <= CL_max and CL == int(sys.argv[1])
 print ("\033[1mContext nucleotides: %d\033[0m" % (CL))
 print ("\033[1mSequence length (output): %d\033[0m" % (SL))
 
+accuracy_donor_train = []
+accuracy_donor_val = []
+accuracy_acceptor_train = []
+accuracy_acceptor_val = []
+df_accuracy_donor_train = pd.DataFrame(columns=['k0.5','k1','k2','k4','AUPRC','t1','t2','t3','t4','#idx_true'])
+df_accuracy_donor_val = df_accuracy_donor_train.copy()
+df_accuracy_acceptor_train = df_accuracy_donor_train.copy()
+df_accuracy_acceptor_val = df_accuracy_donor_train.copy()
+
+
+
 #model creation
 model = SpliceAI(L, W, AR)
 model_m = make_parallel(model, N_GPUS)
@@ -87,14 +102,15 @@ idx_valid = idx_all[int(0.9*num_idx):]
 '''
 The model is trained for 10 epochs
 '''
-EPOCH_NUM = 10*len(idx_train)
+epochs = 10
+EPOCH_NUM = epochs*len(idx_train)
 
 start_time = time.time()
 
 '''
 In each epoch get a index from idx_train and use it to train the model on  h5f[idx] values.
 '''
-for epoch_num in range(EPOCH_NUM):
+for epoch_num in tqdm(range(EPOCH_NUM)):
 
     idx = np.random.choice(idx_train)
 
@@ -148,12 +164,21 @@ for epoch_num in range(EPOCH_NUM):
         Print the statistics for the validation set
         '''
         print ("\n\033[1mAcceptor:\033[0m")
-        print_topl_statistics(np.asarray(Y_true_1[0]),
-                                np.asarray(Y_pred_1[0]))
+        accuracy_list, threshold_list, idx_true, auprc = print_topl_statistics(np.asarray(Y_true_1[0]),np.asarray(Y_pred_1[0]))
+        accuracy_acceptor_val.append(accuracy_list[3])
+        accuracy_list.append(auprc)
+        accuracy_list.extend(threshold_list)
+        accuracy_list.append(idx_true)
+        df_accuracy_acceptor_val.loc[len(df_accuracy_acceptor_val)] = accuracy_list
 
         print ("\n\033[1mDonor:\033[0m")
-        print_topl_statistics(np.asarray(Y_true_2[0]),
-                                  np.asarray(Y_pred_2[0]))
+        accuracy_list, threshold_list, idx_true, auprc = print_topl_statistics(np.asarray(Y_true_2[0]),np.asarray(Y_pred_2[0]))
+        accuracy_donor_val.append(accuracy_list[3])
+        accuracy_list.append(auprc)
+        accuracy_list.extend(threshold_list)
+        accuracy_list.append(idx_true)
+        df_accuracy_donor_val.loc[len(df_accuracy_donor_val)] = accuracy_list
+
 
         print ("\n\033[1mTraining set metrics:\033[0m")
 
@@ -190,12 +215,20 @@ for epoch_num in range(EPOCH_NUM):
         Print the statistics for the training set
         '''
         print ("\n\033[1mAcceptor:\033[0m")
-        print_topl_statistics(np.asarray(Y_true_1[0]),
-                                np.asarray(Y_pred_1[0]))
+        accuracy_list, threshold_list, idx_true, auprc = print_topl_statistics(np.asarray(Y_true_1[0]),np.asarray(Y_pred_1[0]))
+        accuracy_acceptor_train.append(accuracy_list[3])
+        accuracy_list.append(auprc)
+        accuracy_list.extend(threshold_list)
+        accuracy_list.append(idx_true)
+        df_accuracy_acceptor_train.loc[len(df_accuracy_acceptor_train)] = accuracy_list
 
         print ("\n\033[1mDonor:\033[0m")
-        print_topl_statistics(np.asarray(Y_true_2[0]),
-                                np.asarray(Y_pred_2[0]))
+        accuracy_list, threshold_list, idx_true, auprc = print_topl_statistics(np.asarray(Y_true_2[0]),np.asarray(Y_pred_2[0]))
+        accuracy_donor_train.append(accuracy_list[3])
+        accuracy_list.append(auprc)
+        accuracy_list.extend(threshold_list)
+        accuracy_list.append(idx_true)
+        df_accuracy_donor_train.loc[len(df_accuracy_donor_train)] = accuracy_list
 
         print( "Learning rate: %.5f" % (kb.get_value(model_m.optimizer.lr)))
         print ("--- %s seconds ---" % (time.time() - start_time))
@@ -213,6 +246,12 @@ for epoch_num in range(EPOCH_NUM):
         if (epoch_num+1) >= 6*len(idx_train):
             kb.set_value(model_m.optimizer.lr,
                          0.5*kb.get_value(model_m.optimizer.lr))
+
+#saving dataframe results
+df_accuracy_donor_train.to_pickle("./donor_train.pkl")
+df_accuracy_donor_val.to_pickle("./donor_val.pkl")
+df_accuracy_acceptor_train.to_pickle("./acceptor_train.pkl")
+df_accuracy_acceptor_val.to_pickle("./acceptor_val.pkl")
 
 h5f.close()
         
