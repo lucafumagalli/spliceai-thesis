@@ -253,6 +253,47 @@ df_accuracy_donor_val.to_pickle("./donor_val.pkl")
 df_accuracy_acceptor_train.to_pickle("./acceptor_train.pkl")
 df_accuracy_acceptor_val.to_pickle("./acceptor_val.pkl")
 
+#plot for training accuracy
+fig = plt.figure()
+plt.plot([ep for ep in range(epochs)],[acc for acc in accuracy_acceptor_train], label='acceptor')
+plt.plot([ep for ep in range(epochs)],[don for don in accuracy_donor_train], label='donor')
+plt.xlabel('epoch')
+plt.ylabel('topk-accuracy')
+plt.legend()
+plt.xticks([x for x in range(epochs)])
+fig.savefig('accuracy_train.png')
+
+#plot for validation accuracy
+fig1 = plt.figure()
+plt.plot([ep for ep in range(epochs)],[acc for acc in accuracy_acceptor_val], label='acceptor')
+plt.plot([ep for ep in range(epochs)],[don for don in accuracy_donor_val], label='donor')
+plt.xlabel('epoch')
+plt.ylabel('topk-accuracy')
+plt.legend()
+plt.xticks([x for x in range(epochs)])
+fig1.savefig('accuracy_val.png')
+
+
+#plot for train/val acceptor
+fig2 = plt.figure()
+plt.plot([ep for ep in range(epochs)],[acc for acc in accuracy_acceptor_val], label='validation')
+plt.plot([ep for ep in range(epochs)],[don for don in accuracy_acceptor_train], label='training')
+plt.xlabel('epoch')
+plt.ylabel('topk-accuracy')
+plt.legend()
+plt.xticks([x for x in range(epochs)])
+fig2.savefig('acceptor_train_val.png')
+
+#plot for train/val donor
+fig3 = plt.figure()
+plt.plot([ep for ep in range(epochs)],[acc for acc in accuracy_donor_val], label='validation')
+plt.plot([ep for ep in range(epochs)],[don for don in accuracy_donor_train], label='training')
+plt.xlabel('epoch')
+plt.ylabel('topk-accuracy')
+plt.legend()
+plt.xticks([x for x in range(epochs)])
+fig3.savefig('donor_train_val.png')
+
 h5f.close()
         
 ###############################################################################
