@@ -9,6 +9,7 @@ import h5py
 from keras.models import load_model
 from utils import *
 from constants import *
+from tqdm import tqdm
 
 assert int(sys.argv[1]) in [80, 400, 2000, 10000]
 CL = int(sys.argv[1])
@@ -59,7 +60,7 @@ for output_class in [1, 2]:
     '''
     Loop over each subset of the test set
     '''
-    for idx in range(num_idx):
+    for idx in tqdm(range(num_idx)):
 
         '''
         Take data and their labels
