@@ -248,10 +248,10 @@ for epoch_num in tqdm(range(EPOCH_NUM)):
                          0.5*kb.get_value(model_m.optimizer.lr))
 
 #saving dataframe results
-df_accuracy_donor_train.to_pickle("./donor_train.pkl")
-df_accuracy_donor_val.to_pickle("./donor_val.pkl")
-df_accuracy_acceptor_train.to_pickle("./acceptor_train.pkl")
-df_accuracy_acceptor_val.to_pickle("./acceptor_val.pkl")
+df_accuracy_donor_train.to_pickle("./donor_train" +str(sys.argv[2]) + ".pkl")
+df_accuracy_donor_val.to_pickle("./donor_val" + str(sys.argv[2]) + ".pkl")
+df_accuracy_acceptor_train.to_pickle("./acceptor_train " + str(sys.argv[2]) + ".pkl")
+df_accuracy_acceptor_val.to_pickle("./acceptor_val"+ str(sys.argv[2]) + ".pkl")
 
 #plot for training accuracy
 fig = plt.figure()
@@ -261,7 +261,7 @@ plt.xlabel('epoch')
 plt.ylabel('topk-accuracy')
 plt.legend()
 plt.xticks([x for x in range(epochs)])
-fig.savefig('accuracy_train.png')
+fig.savefig('accuracy_train' + str(sys.argv[2]) + '.png')
 
 #plot for validation accuracy
 fig1 = plt.figure()
@@ -271,7 +271,7 @@ plt.xlabel('epoch')
 plt.ylabel('topk-accuracy')
 plt.legend()
 plt.xticks([x for x in range(epochs)])
-fig1.savefig('accuracy_val.png')
+fig1.savefig('accuracy_val' + str(sys.argv[2])+ '.png')
 
 
 #plot for train/val acceptor
@@ -282,7 +282,7 @@ plt.xlabel('epoch')
 plt.ylabel('topk-accuracy')
 plt.legend()
 plt.xticks([x for x in range(epochs)])
-fig2.savefig('acceptor_train_val.png')
+fig2.savefig('acceptor_train_val' + str(sys.argv[2])+ '.png')
 
 #plot for train/val donor
 fig3 = plt.figure()
@@ -292,7 +292,7 @@ plt.xlabel('epoch')
 plt.ylabel('topk-accuracy')
 plt.legend()
 plt.xticks([x for x in range(epochs)])
-fig3.savefig('donor_train_val.png')
+fig3.savefig('donor_train_val' + str(sys.argv[2]) + '.png')
 
 h5f.close()
         
