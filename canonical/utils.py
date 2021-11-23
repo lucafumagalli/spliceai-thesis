@@ -179,7 +179,7 @@ def print_topl_statistics(y_true, y_pred):
 
     idx_true = np.nonzero(y_true == 1)[0]
     argsorted_y_pred = np.argsort(y_pred)
-    sorted_y_pred = np.sort(y_pred)
+    sorted_y_pred = np.sort(y_pred) 
 
     topkl_accuracy = []
     threshold = []
@@ -195,8 +195,5 @@ def print_topl_statistics(y_true, y_pred):
     auprc = average_precision_score(y_true, y_pred)
 
     print('k=0.5\tk=1\tk=2\tk=4\tauprc\tth1\tth2\tth3\tth4\t#idx_true')
-    print ("%.4f\t\033[91m%.4f\t\033[0m%.4f\t%.4f\t\033[94m%.4f\t\033[0m%.4f\t%.4f\t%.4f\t%.4f\t%d" % (
-      topkl_accuracy[0], topkl_accuracy[1], topkl_accuracy[2],
-      topkl_accuracy[3], auprc, threshold[0], threshold[1],
-      threshold[2], threshold[3], len(idx_true)))
+    print(f'{topkl_accuracy[0]:.4f}\t\033[91m{topkl_accuracy[1]:.4f}\t\033[0m{topkl_accuracy[2]:.4f}\t{topkl_accuracy[3]:.4f}\t\033[94m{auprc:.4f}\t\033[0m{threshold[0]:.4f}\t{threshold[1]:.4f}\t{threshold[2]:.4f}\t{threshold[3]:.4f}\t{len(idx_true):}')
     return topkl_accuracy, threshold, len(idx_true),  auprc,
