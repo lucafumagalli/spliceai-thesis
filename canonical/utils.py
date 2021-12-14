@@ -166,8 +166,8 @@ def one_hot_encode(Xd, Yd):
            [OUT_MAP[Yd[t].astype('int8')] for t in range(1)]
 
 '''
-Prints the following information: top-kL statistics for k=0.5,1,2,4,
-auprc, thresholds for k=0.5,1,2,4, number of true splice sites.
+Prints the following information: top-kL statistics for different
+thresholds of the output values, auprc and the number of true splice sites.
 
 Suppose the test set has k positions that belong to the class. We choose the threshold so that 
 exactly k test set positions are predicted as belonging to the class.
