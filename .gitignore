@@ -21,3 +21,13 @@ canonical/datafile_train_0_minimized.h5
 canonical/dataset_test_0_minimized.h5
 canonical/script_train_minimized.sh
 canonical/train_model_minimized.py
+datafile_CFTR.h5
+datafile_train_all_minimized.h5
+dataset_CFTR.h5
+dataset_train_all_minimized.h5
+train80_1/
+train80_2/
+train80_3/
+train80_4/
+train80_5/
+
