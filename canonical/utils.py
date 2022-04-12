@@ -199,29 +199,21 @@ def print_topl_statistics(y_true, y_pred,label):
     
     auprc = average_precision_score(y_true, y_pred)
     #y_pred_as_true = [y for y in y_pred if y > threshold[0]]
-    idx_pred_true = [idx for idx in idx_true if y_pred[idx] >= threshold[0]]
-    #print("LEN PREDICTED AS TRUE: ", len(y_pred_as_true))
+    #idx_pred_true = [idx for idx in idx_true if y_pred[idx] >= threshold[0]]
+
+    print("Idx_pred len: ", len(idx_pred))
+    print("Idx_true len: ", len(idx_true))
+
     print("Index true: ", idx_true)
-    idx_pred_true.sort()
-   # print("Index predicted as true: ", idx_pred)
-    print("Index predicted as true: ", idx_pred_true)
-    print("len idx true: ", len(idx_pred_true))
-    #if (set(idx_true) == set(idx_pred)):
-     #   print("Same indexes")
-    #else:
-       # print("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
-    print("Difference: ", list(set(idx_true) - set(idx_pred_true)))
+    #idx_pred_true.sort()
 
+    print("Index predicted as true: ", idx_pred)
+    #print("len idx true: ", len(idx_pred_true))
 
-    #print('k=0.5\tk=1\tk=2\tk=4\tauprc\tth1\tth2\tth3\tth4\t#idx_true')
-    #print(f'{topkl_accuracy[0]:.4f}\t\033[91m{topkl_accuracy[1]:.4f}\t\033[0m{topkl_accuracy[2]:.4f}\t{topkl_accuracy[3]:.4f}\t\033[94m{auprc:.4f}\t\033[0m{threshold[0]:.4f}\t{threshold[1]:.4f}\t{threshold[2]:.4f}\t{threshold[3]:.4f}\t{len(idx_true):}')
-   # print ("%.4f\t\033[91m%.4f\t\033[0m%.4f\t%.4f\t\033[94m%.4f\t\033[0m"
-    #      + "%.4f\t%.4f\t%.4f\t%.4f\t%d") % (
-     #     topkl_accuracy[0], topkl_accuracy[1], topkl_accuracy[2],
-      #    topkl_accuracy[3], auprc, threshold[0], threshold[1],
-       #   threshold[2], threshold[3], len(idx_true))
+    print("Difference true-pred: ", list(set(idx_true) - set(idx_pred)))
+    print("Difference pred-true: ", list(set(idx_pred) - set(idx_true)))
 
-    cftr_graphics(list(idx_true), idx_pred_true, label)
+    cftr_graphics(idx_true, idx_pred, label)
     return topkl_accuracy, threshold, len(idx_true),auprc
 
 
