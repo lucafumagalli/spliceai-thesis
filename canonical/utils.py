@@ -8,6 +8,7 @@ import re
 from math import ceil
 from sklearn.metrics import average_precision_score
 from constants import *
+import matplotlib.pyplot as plt
 
 assert CL_max % 2 == 0
 
@@ -175,11 +176,11 @@ exactly k test set positions are predicted as belonging to the class.
 The fraction of these k predicted positionsthat truly belong to
  the class is reported as the top-k accuracy.
 '''
-def print_topl_statistics(y_true, y_pred):
+def print_topl_statistics(y_true, y_pred,label):
 
     print("y_true: ", y_true)
     print("ypred: ", np.count_nonzero(y_pred))
-    print(y_pred)
+    #print("len y_pred: ", len(y_pred))
     
     idx_true = np.nonzero(y_true == 1)[0]
     argsorted_y_pred = np.argsort(y_pred)
@@ -188,23 +189,58 @@ def print_topl_statistics(y_true, y_pred):
     topkl_accuracy = []
     threshold = []
 
-    for top_length in [0.5, 1, 2, 4]:
+    for top_length in [1]:
 
         idx_pred = argsorted_y_pred[-int(top_length*len(idx_true)):]
 
         topkl_accuracy += [np.size(np.intersect1d(idx_true, idx_pred)) \
                   / float(min(len(idx_pred), len(idx_true)))]
         threshold += [sorted_y_pred[-int(top_length*len(idx_true))]]
-
+    
     auprc = average_precision_score(y_true, y_pred)
-    y_pred_as_true = [y for y in y_pred if y >= threshold[1]]
-    print("LEN PREDICTED AS TRUE: ", len(y_pred_as_true))
+    #y_pred_as_true = [y for y in y_pred if y > threshold[0]]
+    idx_pred_true = [idx for idx in idx_true if y_pred[idx] >= threshold[0]]
+    #print("LEN PREDICTED AS TRUE: ", len(y_pred_as_true))
+    print("Index true: ", idx_true)
+    idx_pred_true.sort()
+   # print("Index predicted as true: ", idx_pred)
+    print("Index predicted as true: ", idx_pred_true)
+    print("len idx true: ", len(idx_pred_true))
+    #if (set(idx_true) == set(idx_pred)):
+     #   print("Same indexes")
+    #else:
+       # print("NOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO")
+    print("Difference: ", list(set(idx_true) - set(idx_pred_true)))
 
-    print('k=0.5\tk=1\tk=2\tk=4\tauprc\tth1\tth2\tth3\tth4\t#idx_true')
-    print(f'{topkl_accuracy[0]:.4f}\t\033[91m{topkl_accuracy[1]:.4f}\t\033[0m{topkl_accuracy[2]:.4f}\t{topkl_accuracy[3]:.4f}\t\033[94m{auprc:.4f}\t\033[0m{threshold[0]:.4f}\t{threshold[1]:.4f}\t{threshold[2]:.4f}\t{threshold[3]:.4f}\t{len(idx_true):}')
+
+    #print('k=0.5\tk=1\tk=2\tk=4\tauprc\tth1\tth2\tth3\tth4\t#idx_true')
+    #print(f'{topkl_accuracy[0]:.4f}\t\033[91m{topkl_accuracy[1]:.4f}\t\033[0m{topkl_accuracy[2]:.4f}\t{topkl_accuracy[3]:.4f}\t\033[94m{auprc:.4f}\t\033[0m{threshold[0]:.4f}\t{threshold[1]:.4f}\t{threshold[2]:.4f}\t{threshold[3]:.4f}\t{len(idx_true):}')
    # print ("%.4f\t\033[91m%.4f\t\033[0m%.4f\t%.4f\t\033[94m%.4f\t\033[0m"
     #      + "%.4f\t%.4f\t%.4f\t%.4f\t%d") % (
      #     topkl_accuracy[0], topkl_accuracy[1], topkl_accuracy[2],
       #    topkl_accuracy[3], auprc, threshold[0], threshold[1],
        #   threshold[2], threshold[3], len(idx_true))
-    return topkl_accuracy, threshold, len(idx_true),auprc,
+
+    cftr_graphics(list(idx_true), idx_pred_true, label)
+    return topkl_accuracy, threshold, len(idx_true),auprc
+
+
+def cftr_graphics(idx_true, idx_predicted, label):
+    plt.rcParams["figure.figsize"] = (15,1.5)
+    fig = plt.figure()
+    points_predicted = [(x,0.64) for x in idx_predicted]
+    x,y = zip(*points_predicted)
+    plt.scatter(x,y,marker='v', label="Indice predetto")
+    x = range(0, 190000)
+    y = [0.56 for x in range(0, 190000)]
+    plt.plot(x, y, '-r')
+    points_true = [(x,0.56) for x in idx_true]
+    x,y = zip(*points_true)
+    plt.scatter(x, y,marker='d', label="Indice reale")
+    plt.legend()
+    plt.title('Previsione ' + label + ' per gene CFTR')
+    fig.savefig('cftr_'+label+'.pdf')
+
+
+
+

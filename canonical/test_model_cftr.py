@@ -61,13 +61,15 @@ for output_class in [1, 2]:
     Loop over each subset of the test set
     '''
     for idx in tqdm(range(num_idx)):
-        print("prova")
 
         '''
         Take data and their labels
         '''
         X = h5f['X' + str(idx)][:]
         Y = h5f['Y' + str(idx)][:]
+
+        print("X: ", X.shape)
+        print("Y: ", Y.shape)
 
         Xc, Yc = clip_datapoints(X, Y, CL, 1)
 
@@ -100,7 +102,7 @@ for output_class in [1, 2]:
     Y_true[0] = np.asarray(Y_true[0])
     Y_pred[0] = np.asarray(Y_pred[0])
 
-    print_topl_statistics(Y_true[0], Y_pred[0])
+    print_topl_statistics(Y_true[0], Y_pred[0], output_class_labels[output_class])
 
 
 h5f.close()
