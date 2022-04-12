@@ -237,6 +237,8 @@ def cftr_graphics(idx_true, idx_predicted, label):
     points_true = [(x,0.56) for x in idx_true]
     x,y = zip(*points_true)
     plt.scatter(x, y,marker='d', label="Indice reale")
+    plt.axis('off')
+    plt.ylim(top=1)
     plt.legend()
     plt.title('Previsione ' + label + ' per gene CFTR')
     fig.savefig('cftr_'+label+'.pdf')
